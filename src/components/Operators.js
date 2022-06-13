@@ -16,13 +16,13 @@ const Operator = ({ op, type, cols = 1, color = 'primary', display, setDisplay }
 			} else if (display === '0000') {
 				console.log("can't put an operator before any numbers");
 				return;
-			} else if (/[-+/*\.]$/.test(display) && op !== '.') {
-				console.log("can't add more than one operator");
-				return;
-			} else if (op === '=') {
-				return;
 			} else if (op.toLowerCase() === 'c') {
 				setDisplay('0000');
+			} else if (op === '=') {
+				return;
+			} else if (/\s$/.test(display)) {
+				console.log("can't add more than one operator");
+				return;
 			} else setDisplay(display + ' ' + op + ' ');
 		},
 		[ display, setDisplay, op ]
