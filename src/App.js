@@ -1,5 +1,11 @@
+import Wrapper from './Wrapper';
+
 function App() {
-	return <div className="App">calc</div>;
+	return (
+		<div className="App">
+			<Wrapper />
+		</div>
+	);
 }
 
 export default App;
