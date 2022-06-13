@@ -1,28 +1,31 @@
-import { Grid, Button, Typography } from '@mui/material';
+import { Grid, Typography, Button } from '@mui/material';
 import { useCallback, useEffect } from 'react';
 
-const Num = ({ val, cols = 1, number, color = 'secondary', display, setDisplay }) => {
+const Operator = ({ op, type, cols = 1, color = 'primary', display, setDisplay }) => {
 	const updateDisplay = useCallback(
 		() => {
-			console.log(val);
 			if (display === '0000') {
-				if (val === '0') {
-					return;
-				} else {
-					setDisplay(val);
-				}
-			} else setDisplay(display + val);
+				console.log("can't put an operator before any numbers");
+				return;
+			} else if (/[-+/*]$/.test(display)) {
+				console.log("can't add more than one operator");
+				return;
+			} else if (op === '=') {
+				return;
+			} else if (op.toLowerCase() === 'c') {
+				setDisplay('0000');
+			} else setDisplay(display + op);
 		},
-		[ display, setDisplay, val ]
+		[ display, setDisplay, op ]
 	);
 
 	const handleKeyDown = useCallback(
 		e => {
-			if (e.key === val) {
+			if (e.key === op.toLowerCase()) {
 				updateDisplay();
 			}
 		},
-		[ updateDisplay, val ]
+		[ updateDisplay, op ]
 	);
 
 	useEffect(
@@ -41,7 +44,7 @@ const Num = ({ val, cols = 1, number, color = 'secondary', display, setDisplay }
 	return (
 		<Grid item xs={3 * cols}>
 			<Button
-				id={number}
+				id={type}
 				variant="contained"
 				sx={{
 					width: '100%',
@@ -51,11 +54,11 @@ const Num = ({ val, cols = 1, number, color = 'secondary', display, setDisplay }
 				onClick={updateDisplay}
 			>
 				<Typography variant="h4" component="p" color="text.primary">
-					{val}
+					{op}
 				</Typography>
 			</Button>
 		</Grid>
 	);
 };
 
-export default Num;
+export default Operator;
