@@ -4,7 +4,6 @@ import { useCallback, useEffect } from 'react';
 const Num = ({ val, cols = 1, number, color = 'secondary', display, setDisplay }) => {
 	const updateDisplay = useCallback(
 		() => {
-			console.log(val);
 			if (display === '0000') {
 				if (val === '0') {
 					return;
