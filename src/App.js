@@ -1,10 +1,11 @@
+import { Container } from '@mui/system';
 import Wrapper from './Wrapper';
 
 function App() {
 	return (
-		<div className="App">
+		<Container sx={{ bgcolor: '#cfe8fc', height: '100vh' }}>
 			<Wrapper />
-		</div>
+		</Container>
 	);
 }
 
