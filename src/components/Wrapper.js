@@ -1,9 +1,11 @@
 import { Grid } from '@mui/material';
+import Display from './Display';
 import Num from './Num';
 
 const Wrapper = () => {
 	return (
 		<Grid height="100%" container spacing={1}>
+			<Display />
 			<Num val="7" />
 			<Num val="8" />
 			<Num val="9" />
@@ -16,7 +18,7 @@ const Wrapper = () => {
 			<Num val="2" />
 			<Num val="3" />
 			<Num val="--" />
-			<Num val="0" />
+			<Num val="0" cols="2" />
 		</Grid>
 	);
 };
