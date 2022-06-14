@@ -1,26 +1,39 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function useUpdateDisplay() {
 	const [ display, setDisplay ] = useState('0');
-	const [ result, setResult ] = useState('0');
-
-	const regex = {
+	const [ isEvaluated, setIsEvaluated ] = useState(false);
+	const vars = {
 		isNumber: /[0-9]/,
 		isOperator: /[-+/*]/,
 		endSpace: /\s$/,
 		endOperator: /([/*+-]+\s)$/,
 		endDecimal: /\.$/,
-		hasDecimal: /[[0-9]*\.[0-9]*$/
+		hasDecimal: /[[0-9]*\.[0-9]*$/,
+		endMinus: /(\s?)+-(\s?)+$/,
+		endMultipleOperators: /[^\d]*$/
 	};
 
-	const { isNumber, isOperator, endOperator, endDecimal, hasDecimal } = regex;
+	useEffect(
+		() => {
+			const getEval = isEvaluated;
+			setIsEvaluated(getEval);
+		},
+		[ isEvaluated ]
+	);
+
+	const handleEvaluation = (val, result) => {
+		setIsEvaluated(val);
+		setDisplay(result);
+	};
+
+	const { isNumber, isOperator, endMinus, endOperator, endDecimal, hasDecimal, endMultipleOperators } = vars;
 
 	const updateDisplay = input => {
 		if (input.toLowerCase() === 'c') {
-			setDisplay('0');
+			handleEvaluation(false, '0');
 		} else if (input === '=') {
-			setResult('5');
-			setDisplay(result);
+			handleEvaluation(true, eval(display));
 		} else {
 			if (display === '0') {
 				if (input === '.') {
@@ -34,9 +47,20 @@ function useUpdateDisplay() {
 				} else if (isNumber.test(input)) {
 					setDisplay(input);
 				}
+			} else if (endMinus.test(display)) {
+				if (input === '-') {
+					return;
+				} else if (isNumber.test(input)) {
+					setDisplay(`${display}${input}`);
+				} else if (isOperator.test(input)) {
+					setDisplay(display.replace(endMultipleOperators, ` ${input} `));
+				}
 			} else if (endOperator.test(display)) {
-				if (isOperator.test(input)) {
-					setDisplay(display.replace(endOperator, ` ${input} `));
+				if (input === '-') {
+					setDisplay(`${display} ${input}`);
+				} else if (isOperator.test(input)) {
+					console.log(display.match(endOperator));
+					setDisplay(display.replace(endMultipleOperators, ` ${input} `));
 				} else if (input === '.') {
 					setDisplay(`${display} 0${input}`);
 				} else {
@@ -53,11 +77,17 @@ function useUpdateDisplay() {
 			} else if (input === '.') {
 				if (hasDecimal.test(display)) {
 					return;
+				} else if (isEvaluated) {
+					handleEvaluation(false, `0${input}`);
 				} else setDisplay(`${display}${input}`);
 			} else if (isOperator.test(input)) {
 				setDisplay(`${display} ${input} `);
 			} else {
-				setDisplay(`${display}${input}`);
+				if (isEvaluated) {
+					handleEvaluation(false, `${input}`);
+				} else {
+					setDisplay(`${display}${input}`);
+				}
 			}
 		}
 	};
@@ -69,6 +99,11 @@ function useUpdateDisplay() {
 	};
 
 	return { display, updateDisplay, handleKeyDown };
+
+	function newFunction() {
+		let isEvaluated;
+		return isEvaluated;
+	}
 }
 
 export default useUpdateDisplay;
