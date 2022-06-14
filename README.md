@@ -1,6 +1,6 @@
 # JAVASCRIPT CALCULATOR
 
-[demo](demolink)
+[demo](https://souperstition.github.io/calc/)
 
 Built Using:
 - React 
