@@ -1,40 +1,18 @@
 import { Grid, Button, Typography } from '@mui/material';
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 
-const Num = ({ val, cols = 1, number, color = 'secondary', display, setDisplay }) => {
-	const updateDisplay = useCallback(
-		() => {
-			if (display === '0') {
-				if (val === '0') {
-					return;
-				} else {
-					setDisplay(val);
-				}
-			} else setDisplay(display + val);
-		},
-		[ display, setDisplay, val ]
-	);
-
-	const handleKeyDown = useCallback(
-		e => {
-			if (e.key === val) {
-				updateDisplay();
-			}
-		},
-		[ updateDisplay, val ]
-	);
-
+const Num = ({ val, cols = 1, number, color = 'secondary', updateDisplay, handleKeyDown }) => {
 	useEffect(
 		() => {
 			const f = e => {
-				handleKeyDown(e);
+				handleKeyDown(e, val);
 			};
 			document.addEventListener('keydown', f);
 			return () => {
 				document.removeEventListener('keydown', f);
 			};
 		},
-		[ handleKeyDown ]
+		[ handleKeyDown, val ]
 	);
 
 	return (
@@ -47,7 +25,7 @@ const Num = ({ val, cols = 1, number, color = 'secondary', display, setDisplay }
 					height: '100%'
 				}}
 				color={color}
-				onClick={updateDisplay}
+				onClick={() => updateDisplay(val)}
 			>
 				<Typography variant="h4" component="p" color="text.primary">
 					{val}
