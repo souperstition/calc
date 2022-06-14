@@ -9,6 +9,8 @@ const Operator = ({ op, type, cols = 1, color = 'primary', display, setDisplay }
 				if (/[[0-9]*\.[0-9]*$/.test(display)) {
 					// can't have two decimals in a single number
 					return;
+				} else if (display === '0') {
+					setDisplay(display + op);
 				} else if (/\s$/.test(display)) {
 					setDisplay(`${display} 0${op}`);
 				} else setDisplay(display + op);
