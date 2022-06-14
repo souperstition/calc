@@ -4,26 +4,35 @@ import { useCallback, useEffect } from 'react';
 const Operator = ({ op, type, cols = 1, color = 'primary', display, setDisplay }) => {
 	const updateDisplay = useCallback(
 		() => {
+			// decimal
 			if (op === '.') {
 				if (/[[0-9]*\.[0-9]*$/.test(display)) {
-					console.log("can't have two decimals in a single number");
+					// can't have two decimals in a single number
 					return;
-				} else if (display === '0000') {
-					setDisplay('0' + op);
 				} else if (/\s$/.test(display)) {
-					setDisplay(display + ' 0' + op);
+					setDisplay(`${display} 0${op}`);
 				} else setDisplay(display + op);
-			} else if (display === '0000') {
-				console.log("can't put an operator before any numbers");
-				return;
+			} else if (display === '0') {
+				// empty display
+				if (op === '-') {
+					setDisplay(op);
+				} else {
+					// can't put an operator before any numbers
+					return;
+				}
 			} else if (op.toLowerCase() === 'c') {
-				setDisplay('0000');
+				// clear
+				setDisplay('0');
 			} else if (op === '=') {
+				// CALCULATE RESULTS
 				return;
-			} else if (/\s$/.test(display)) {
-				console.log("can't add more than one operator");
-				return;
-			} else setDisplay(display + ' ' + op + ' ');
+			} else if (/([/*+-]+\s)$/.test(display)) {
+				// if the last item is an operator and another operator is pressed, replace that operator with the new one
+				setDisplay(display.replace(/([/*+-]+\s)$/, `${op} `));
+			} else if (/\.$/.test(display)) {
+				// if the last item is a decimal and an operator is pressed, replace the decimal
+				setDisplay(display.replace(/\.$/, ` ${op} `));
+			} else setDisplay(`${display} ${op} `);
 		},
 		[ display, setDisplay, op ]
 	);
