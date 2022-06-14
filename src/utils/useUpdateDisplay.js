@@ -30,6 +30,7 @@ function useUpdateDisplay() {
 	const { isNumber, isOperator, endMinus, endOperator, endDecimal, hasDecimal, endMultipleOperators } = vars;
 
 	const updateDisplay = input => {
+		console.log(isEvaluated);
 		if (input.toLowerCase() === 'c') {
 			handleEvaluation(false, '0');
 		} else if (input === '=') {
@@ -51,7 +52,7 @@ function useUpdateDisplay() {
 				if (input === '-') {
 					return;
 				} else if (isNumber.test(input)) {
-					setDisplay(`${display}${input}`);
+					setDisplay(`${display} ${input}`);
 				} else if (isOperator.test(input)) {
 					setDisplay(display.replace(endMultipleOperators, ` ${input} `));
 				}
@@ -81,7 +82,11 @@ function useUpdateDisplay() {
 					handleEvaluation(false, `0${input}`);
 				} else setDisplay(`${display}${input}`);
 			} else if (isOperator.test(input)) {
-				setDisplay(`${display} ${input} `);
+				if (isEvaluated) {
+					handleEvaluation(false, `${display} ${input}`);
+				} else {
+					setDisplay(`${display} ${input} `);
+				}
 			} else {
 				if (isEvaluated) {
 					handleEvaluation(false, `${input}`);
