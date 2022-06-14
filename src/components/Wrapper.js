@@ -5,7 +5,7 @@ import Num from './Num';
 import Operator from './Operators';
 
 const Wrapper = () => {
-	const [ display, setDisplay ] = useState('0000');
+	const [ display, setDisplay ] = useState('0');
 
 	return (
 		<Grid
