@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 function useUpdateDisplay() {
 	const [ display, setDisplay ] = useState('0');
@@ -14,14 +14,6 @@ function useUpdateDisplay() {
 		endMultipleOperators: /[^\d]*$/
 	};
 
-	useEffect(
-		() => {
-			const getEval = isEvaluated;
-			setIsEvaluated(getEval);
-		},
-		[ isEvaluated ]
-	);
-
 	const handleEvaluation = (val, result) => {
 		setIsEvaluated(val);
 		setDisplay(result);
@@ -30,10 +22,10 @@ function useUpdateDisplay() {
 	const { isNumber, isOperator, endMinus, endOperator, endDecimal, hasDecimal, endMultipleOperators } = vars;
 
 	const updateDisplay = input => {
-		console.log(isEvaluated);
 		if (input.toLowerCase() === 'c') {
 			handleEvaluation(false, '0');
 		} else if (input === '=') {
+			// eslint-disable-next-line
 			handleEvaluation(true, eval(display));
 		} else {
 			if (display === '0') {
@@ -104,11 +96,6 @@ function useUpdateDisplay() {
 	};
 
 	return { display, updateDisplay, handleKeyDown };
-
-	function newFunction() {
-		let isEvaluated;
-		return isEvaluated;
-	}
 }
 
 export default useUpdateDisplay;
